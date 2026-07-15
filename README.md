@@ -1,0 +1,2 @@
+# Shopify-embedded-app
+A react-vite, nodeJS app with embedded shopify, shopify OAuth and Drizzle ORM with MySQL
