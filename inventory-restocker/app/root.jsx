@@ -13,7 +13,7 @@ export default function App() {
 				/>
 				<meta
 					name="shopify-api-key"
-					content="eee26b2af6996115aa8bd28fdede5665"
+					content="cf05fa3cce96616403eb04cffb16fbf4"
 				/>
 				<script src="https://cdn.shopify.com/shopifycloud/polaris.js" />
 				<Meta />
