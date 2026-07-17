@@ -38,17 +38,16 @@ export default function Products() {
 
 	const renderImage = (image) => {
 		return image ? (
-			<s-image
+			<s-thumbnail
 				src={image.url}
 				alt={image.altText}
 				aspectRatio="1/1"
 				objectFit="cover"
 				borderRadius="base"
 				inlineSize="300"
-				srcSet={`${image.url} 400w, 
-          ${image.url} 800w`}
-				sizes="(max-width: 600px) 100vw, (max-width: 1200px) 50vw, 400px"
-			></s-image>
+				srcSet={`${image.url} 400w, ${image.url} 800w`}
+				sizes="small-200"
+			></s-thumbnail>
 		) : (
 			<s-image></s-image>
 		);
@@ -57,47 +56,43 @@ export default function Products() {
 	return (
 		<s-page heading="Products">
 			<s-button slot="primary-action">Primary button</s-button>
-			<s-layout>
-				<s-section>
-					<s-card>
-						<s-stack gap="base" direction="inline">
-							<s-text type="strong">Products go here!!!</s-text>
+			<s-grid gap="large-100">
+				<s-section padding="base" gap="large-100">
+						<s-stack gap="medium-100" direction="vertical">
 							<s-text type="strong">{shop.name}</s-text>
+						<s-stack  gap="large-100" direction='inline'>
+							<s-button
+								icon="edit"
+								variant="primary"
+								onClick={() => shopify.toast.show("hello there!")}
+								>
+								Sample button
+							</s-button>
+							<s-button commandFor="modal">Open modal</s-button>
+								</s-stack>
 						</s-stack>
-						<s-button
-							icon="edit"
-							variant="primary"
-							onClick={() => shopify.toast.show("hello there!")}
-						>
-							Sample button
-						</s-button>
-						<s-button commandFor="modal">Open modal</s-button>
-					</s-card>
 				</s-section>
 				<s-section>
 					<s-card>
-						<s-block-stack gap="300">
+						<s-stack gap="large-100">
 							{products.length === 0 ? (
 								<s-text type="strong">No products found</s-text>
 							) : (
 								<s-unordered-list>
 									{products.map(({ node: product }) => (
-										<s-list-item key={product.id}>
-											<s-stack gap="300" direction="inline">
+										<s-list-item key={product.id} gap="300">
+											<s-stack gap="large-100" direction="inline">
 												{renderImage(product.featuredImage)}
-												<s-stack>
-													<s-text type="strong">{product.title}</s-text>
-													<s-text>{product.handle}</s-text>
-												</s-stack>
+												<s-text type="strong" >{product.title}</s-text>
 											</s-stack>
 										</s-list-item>
 									))}
 								</s-unordered-list>
 							)}
-						</s-block-stack>
+						</s-stack>
 					</s-card>
 				</s-section>
-			</s-layout>
+			</s-grid>
 
 			<s-modal id="modal" heading="Sample modal title">
 				<s-paragraph>Modal content</s-paragraph>
