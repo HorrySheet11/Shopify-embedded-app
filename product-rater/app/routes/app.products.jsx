@@ -19,7 +19,7 @@ export async function loader({ request }) {
           }
         }
       }
-      
+
       shop {
         name
         id
@@ -69,7 +69,7 @@ export default function Products() {
 								Sample button
 							</s-button>
 							<s-button commandFor="modal">Open modal</s-button>
-								</s-stack>
+									</s-stack>
 						</s-stack>
 				</s-section>
 				<s-section>

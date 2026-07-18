@@ -1,13 +1,15 @@
 # Learn more about configuring your app at https://shopify.dev/docs/apps/tools/cli/configuration
 
 client_id = "cf05fa3cce96616403eb04cffb16fbf4"
-name = "inventory-restocker"
-application_url = "https://example.com"
+name = "product-rater"
+application_url = "https://product-rater.com"
 embedded = true
 
 [access_scopes]
 # Learn more at https://shopify.dev/docs/apps/tools/cli/configuration#access_scopes
-scopes = "write_products,write_metaobjects,write_metaobject_definitions,read_products"
+scopes = "write_metaobject_definitions,write_metaobjects,read_products,write_products"
+optional_scopes = [ ]
+use_legacy_install_flow = false
 
 [product.metafields.app.demo_info]
 type = "single_line_text_field"
@@ -37,15 +39,16 @@ type = "multi_line_text_field"
 api_version = "2026-10"
 
   [[webhooks.subscriptions]]
-  uri = "/webhooks/app/uninstalled"
+  uri = "https://example.com/webhooks/app/uninstalled"
   topics = [ "app/uninstalled" ]
 
   [[webhooks.subscriptions]]
-  uri = "/webhooks/app/scopes_update"
+  uri = "https://example.com/webhooks/app/scopes_update"
   topics = [ "app/scopes_update" ]
 
 [auth]
 redirect_urls = [ "https://example.com/api/auth" ]
 
 [build]
+include_config_on_deploy = true
 automatically_update_urls_on_dev = true
