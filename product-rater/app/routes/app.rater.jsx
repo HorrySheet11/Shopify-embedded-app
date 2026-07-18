@@ -37,7 +37,6 @@ export default function RaterPage() {
     productId: null,
     name: "",
     rating: 0,
-    // comment: "",
   });
 
   function handleRate(event) {
@@ -64,9 +63,8 @@ export default function RaterPage() {
     setSelectedProduct(null);
     setProductRating({
       productId: null,
-      title: "",
+      name: "",
       rating: 0,
-      comment: "",
     });
   }
 
@@ -96,7 +94,7 @@ export default function RaterPage() {
   return (
     <s-page heading="Rate your Products">
       <s-modal id='rate-modal' heading="Rate this product" afterHide={()=>onModalHide()}>
-        <form onSubmit={handlePost}>
+        <form onSubmit={handleSubmit()}>
           <s-modal-dialog> 
             <s-modal-section>
               <s-stack gap="large-100" direction="inline">
