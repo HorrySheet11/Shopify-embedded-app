@@ -1,12 +1,12 @@
+import axios from "axios";
+import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router";
 import { authenticate } from "../shopify.server";
-import { useEffect, useState } from "react";
-
 
 export async function loader({ request }) {
-  const { admin } = await authenticate.admin(request);
+	const { admin } = await authenticate.admin(request);
 
-  const response = await admin.graphql(`	#graphql
+	const response = await admin.graphql(`	#graphql
     query fetchProducts{
       products(first: 10) {
         edges{
@@ -23,57 +23,66 @@ export async function loader({ request }) {
     }
   `);
 
-  const productsData = (await response.json()).data;
-  return { products: productsData.products.edges, shop: productsData.shop };
+	const productsData = (await response.json()).data;
+	return { products: productsData.products.edges, shop: productsData.shop };
 }
 
-
 export default function RaterPage() {
-  const { products } = useLoaderData();
+	const { products } = useLoaderData();
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
+	const [selectedProduct, setSelectedProduct] = useState(null);
 
-  const [productRating, setProductRating] = useState({
-    productId: null,
-    name: "",
-    rating: 0,
-  });
+	const [productRating, setProductRating] = useState({
+		productId: null,
+		name: "",
+		rating: 5,
+	});
 
-  function handleRate(event) {
-    const values = (event.currentTarget).values;
+	function handleRate(event) {
+		const values = event.currentTarget.values;
+		setProductRating({
+			...productRating,
+			rating: values,
+		});
+		// console.log(productRating);
+	}
+
+	useEffect(() => {
+		// document.getElementById('rate-modal').showModal();
+		console.log(productRating);
+	}, [productRating]);
+
+	useEffect(() => {
+	    console.log(selectedProduct);
+	}, [selectedProduct]);
+
+	function onModalHide() {
+		setSelectedProduct(null);
+		setProductRating({
+			productId: null,
+			name: "",
+			rating: 0,
+		});
+	}
+
+	async function handleSubmit() {
     setProductRating({
       ...productRating,
-      rating: values,
-    });
-    console.log(productRating);
-  }
-  
+      productId: selectedProduct.id,
+      name: selectedProduct.title
+    })
+		
+		const response = await axios
+			.post("http://localhost:3000/rate", productRating)
+			.then((response) => {
+				console.log(response);
+			})
+			.catch((error) => {
+				console.log(error);
+			});
+    console.log(response);
+	}
 
-  useEffect(() => {
-      // document.getElementById('rate-modal').showModal();
-      console.log(productRating);
-  }, [productRating]);
-
-  useEffect(() => {
-      // document.getElementById('rate-modal').showModal();
-      console.log(selectedProduct);
-  }, [selectedProduct]);
-
-  function onModalHide() {
-    setSelectedProduct(null);
-    setProductRating({
-      productId: null,
-      name: "",
-      rating: 0,
-    });
-  }
-
-  function handleSubmit(){
-
-
-  }
-
-  
 	const renderImage = (image) => {
 		return image ? (
 			<s-thumbnail
@@ -91,55 +100,84 @@ export default function RaterPage() {
 		);
 	};
 
-  return (
-    <s-page heading="Rate your Products">
-      <s-modal id='rate-modal' heading="Rate this product" afterHide={()=>onModalHide()}>
-        <form onSubmit={handleSubmit()}>
-          <s-modal-dialog> 
-            <s-modal-section>
-              <s-stack gap="large-100" direction="inline">
-                {renderImage(selectedProduct?.featuredImage)}
-                <s-text type="strong" >{selectedProduct?.title}</s-text>
-                <s-choice-list direction="inline" onChange={event => {setProductRating({...productRating, rating: event.currentTarget.values  })}}>
-                  <s-choice name='rating' value='1'>1 ⭐</s-choice>
-                  <s-choice name='rating' value='2'>2 ⭐</s-choice>
-                  <s-choice name='rating' value='3'>3 ⭐</s-choice>
-                  <s-choice name='rating' value='4'>4 ⭐</s-choice>
-                  <s-choice name='rating' value='5' defaultSelected>5 ⭐</s-choice>
-                </s-choice-list>
-              </s-stack>
-            </s-modal-section>
-            <s-modal-footer>
-              <s-button commandFor="rate-modal" type='submit'>Rate</s-button>
-            </s-modal-footer>
-          </s-modal-dialog>
-        </form>
-      </s-modal>
-      <s-section heading="Give a rating for your shop's products.">
-      <s-card>
-						<s-stack gap="large-100">
-							{products.length === 0 ? (
-								<s-text type="strong">No products found</s-text>
-							) : (
-								<s-unordered-list>
-									{products.map(({ node: product }) => (
-										<>
-										  <s-list-item key={product.id} gap="300">
-  											<s-stack gap="large-100" direction="inline">
-  												{renderImage(product.featuredImage)}
-                          <s-text type="strong" >{product.title}</s-text>
-  											</s-stack>
-                          <s-button commandFor="rate-modal" command="open" onClick={() => setSelectedProduct(product)}>Rate</s-button>
-                      </s-list-item>
-                      <s-divider></s-divider>
-										</>
-									))}
-								</s-unordered-list>
-							)}
-						</s-stack>
-					</s-card>
-
-      </s-section>
-    </s-page> 
-  );
+	return (
+		<s-page heading="Rate your Products">
+			<s-modal
+				id="rate-modal"
+				heading="Rate this product"
+				afterHide={() => onModalHide()}
+			>
+				<form onSubmit={()=>handleSubmit()}>
+					<s-modal-dialog>
+						<s-modal-section>
+							<s-stack gap="large-100" direction="inline">
+								{renderImage(selectedProduct?.featuredImage)}
+								<s-text type="strong">{selectedProduct?.title}</s-text>
+								<s-choice-list
+									direction="inline"
+									onChange={(event) => {
+										setProductRating({
+											...productRating,
+											rating: event.currentTarget.values.join(),
+										});
+									}}
+								>
+									<s-choice name="rating" value={1}>
+										1 ⭐
+									</s-choice>
+									<s-choice name="rating" value={2}>
+										2 ⭐
+									</s-choice>
+									<s-choice name="rating" value={3}>
+										3 ⭐
+									</s-choice>
+									<s-choice name="rating" value={4}>
+										4 ⭐
+									</s-choice>
+									<s-choice name="rating" value={5} defaultSelected>
+										5 ⭐
+									</s-choice>
+								</s-choice-list>
+							</s-stack>
+						</s-modal-section>
+						<s-modal-footer>
+							<s-button commandFor="rate-modal" type="submit">
+								Rate
+							</s-button>
+						</s-modal-footer>
+					</s-modal-dialog>
+				</form>
+			</s-modal>
+			<s-section heading="Give a rating for your shop's products.">
+				<s-card>
+					<s-stack gap="large-100">
+						{products.length === 0 ? (
+							<s-text type="strong">No products found</s-text>
+						) : (
+							<s-unordered-list>
+								{products.map(({ node: product }) => (
+									<>
+										<s-list-item key={product.id} gap="300">
+											<s-stack gap="large-100" direction="inline">
+												{renderImage(product.featuredImage)}
+												<s-text type="strong">{product.title}</s-text>
+											</s-stack>
+											<s-button
+												commandFor="rate-modal"
+												command="open"
+												onClick={() => setSelectedProduct(product)}
+											>
+												Rate
+											</s-button>
+										</s-list-item>
+										<s-divider></s-divider>
+									</>
+								))}
+							</s-unordered-list>
+						)}
+					</s-stack>
+				</s-card>
+			</s-section>
+		</s-page>
+	);
 }
