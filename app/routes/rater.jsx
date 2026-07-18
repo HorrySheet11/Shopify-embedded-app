@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAppBridge } from '@shopify/app-bridge-react';
 
@@ -52,6 +52,20 @@ const Rater = () => {
       setSubmitting(false);
     }
   };
+
+  // Function to be called when modal is hidden - resets selection state
+  const onModalHide = () => {
+    setRating(0);
+    setError('');
+    setSuccess(false);
+  };
+
+  // Call onModalHide when component unmounts (simulating modal hide)
+  useEffect(() => {
+    return () => {
+      onModalHide();
+    };
+  }, []);
 
   // If no productId is provided, show an error and redirect back
   if (!productId) {

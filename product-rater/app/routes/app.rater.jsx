@@ -20,12 +20,10 @@ export async function loader({ request }) {
           }
         }
       }
-
     }
   `);
 
   const productsData = (await response.json()).data;
-  console.log(productsData);
   return { products: productsData.products.edges, shop: productsData.shop };
 }
 
@@ -37,22 +35,29 @@ export default function RaterPage() {
 
   const [productRating, setProductRating] = useState({
     productId: null,
-    title: "",
+    name: "",
     rating: 0,
-    comment: "",
+    // comment: "",
   });
 
   function handleRate(event) {
+    const values = (event.currentTarget).values;
     setProductRating({
       ...productRating,
-      rating: event.target.value,
+      rating: values,
     });
+    console.log(productRating);
   }
+  
+
   useEffect(() => {
-    if (selectedProduct) {
+      // document.getElementById('rate-modal').showModal();
+      console.log(productRating);
+  }, [productRating]);
+
+  useEffect(() => {
       // document.getElementById('rate-modal').showModal();
       console.log(selectedProduct);
-    }
   }, [selectedProduct]);
 
   function onModalHide() {
@@ -63,7 +68,11 @@ export default function RaterPage() {
       rating: 0,
       comment: "",
     });
-    
+  }
+
+  function handleSubmit(){
+
+
   }
 
   
@@ -86,25 +95,27 @@ export default function RaterPage() {
 
   return (
     <s-page heading="Rate your Products">
-      <s-modal id='rate-modal' heading="Rate this product" afterHide={onModalHide}>
-        <s-modal-dialog> 
-          <s-modal-section>
-            <s-stack gap="large-100" direction="inline">
-              {renderImage(selectedProduct?.featuredImage)}
-              <s-text type="strong" >{selectedProduct?.title}</s-text>
-              <s-choice-list direction="inline" onChange='handleRate(event)'>
-                <s-choice value='1'>1 ⭐</s-choice>
-                <s-choice value='2'>2 ⭐</s-choice>
-                <s-choice value='3'>3 ⭐</s-choice>
-                <s-choice value='4'>4 ⭐</s-choice>
-                <s-choice value='5'>5 ⭐</s-choice>
-              </s-choice-list>
-            </s-stack>
-          </s-modal-section>
-          <s-modal-footer>
-            <s-button commandFor="rate-modal">Rate</s-button>
-          </s-modal-footer>
-        </s-modal-dialog>
+      <s-modal id='rate-modal' heading="Rate this product" afterHide={()=>onModalHide()}>
+        <form onSubmit={handlePost}>
+          <s-modal-dialog> 
+            <s-modal-section>
+              <s-stack gap="large-100" direction="inline">
+                {renderImage(selectedProduct?.featuredImage)}
+                <s-text type="strong" >{selectedProduct?.title}</s-text>
+                <s-choice-list direction="inline" onChange={event => {setProductRating({...productRating, rating: event.currentTarget.values  })}}>
+                  <s-choice name='rating' value='1'>1 ⭐</s-choice>
+                  <s-choice name='rating' value='2'>2 ⭐</s-choice>
+                  <s-choice name='rating' value='3'>3 ⭐</s-choice>
+                  <s-choice name='rating' value='4'>4 ⭐</s-choice>
+                  <s-choice name='rating' value='5' defaultSelected>5 ⭐</s-choice>
+                </s-choice-list>
+              </s-stack>
+            </s-modal-section>
+            <s-modal-footer>
+              <s-button commandFor="rate-modal" type='submit'>Rate</s-button>
+            </s-modal-footer>
+          </s-modal-dialog>
+        </form>
       </s-modal>
       <s-section heading="Give a rating for your shop's products.">
       <s-card>
@@ -120,7 +131,7 @@ export default function RaterPage() {
   												{renderImage(product.featuredImage)}
                           <s-text type="strong" >{product.title}</s-text>
   											</s-stack>
-                          <s-button commandFor="rate-modal" command="open" onClick={() => setSelectedProduct(product)}>Rates</s-button>
+                          <s-button commandFor="rate-modal" command="open" onClick={() => setSelectedProduct(product)}>Rate</s-button>
                       </s-list-item>
                       <s-divider></s-divider>
 										</>
