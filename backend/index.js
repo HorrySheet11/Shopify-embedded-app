@@ -3,7 +3,7 @@ import 'dotenv/config';
 import {eq} from "drizzle-orm";
 import {drizzle} from "drizzle-orm/mysql2";
 import { productsTable } from './src/db/schema.js';
-import routes from './src/routers/index.js';
+import routes from './src/routers/indexRouter.js';
 
 const app = express();
 const db = drizzle(process.env.DATABASE_URL);
