@@ -1,4 +1,4 @@
-import { getItemRating} from "../models/Rate.js";
+import { getItemRating, postItemRating } from "../models/Rate.js";
 
 
 export async function getRating(req, res) {
