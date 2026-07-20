@@ -55,13 +55,14 @@ export default function Products() {
 
 	return (
 		<s-page heading="Products">
-			<s-button slot="primary-action">Primary button</s-button>
+			<s-button slot="primary-action" href="/app/rater">Rate your Products</s-button>
 			<s-grid gap="large-100">
 				<s-section padding="base" gap="large-100">
 						<s-stack gap="medium-100" direction="vertical">
 							<s-text type="strong">{shop.name}</s-text>
 						<s-stack  gap="large-100" direction='inline'>
-							<s-button
+							{/** biome-ignore lint/a11y/noStaticElementInteractions: <explanation> */}
+<s-button
 								icon="edit"
 								variant="primary"
 								onClick={() => shopify.toast.show("hello there!")}

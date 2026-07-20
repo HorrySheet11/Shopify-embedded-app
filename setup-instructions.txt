@@ -1,0 +1,9 @@
+Shopify theme: 
+>shopify theme init (initialize shopify cli for theme)
+>cd new-theme (change directory to custom theme)
+>shopify theme dev (allows to edit theme from editor)
+
+Product Rater:
+>npx shopify app init (initialize shopify cli for app)
+>cd app-name  (change directory to custom app)
+>npm run dev (start local server and preview app)

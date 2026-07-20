@@ -1,1 +1,1 @@
-A react-vite, nodeJS app with embedded shopify, shopify OAuth and Drizzle ORM with MySQL
+A shopify vite react router, nodeJS app with embedded shopify, shopify OAuth and Drizzle ORM with MySQL product rater app
